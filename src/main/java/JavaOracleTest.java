@@ -10,6 +10,13 @@ public class JavaOracleTest {
         try {
             Connection connection = DriverManager.getConnection(dbUrl, username, password);
             System.out.println("Connected to Oracle database server");
+
+            //Statement
+            /*String sql = "INSERT INTO AREA VALUES (987, 'XXX')";
+            Statement statement = connection.createStatement();
+            int rows = statement.executeUpdate(sql);*/
+
+            //Prepared statement
             String sql = "INSERT INTO AREA VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, "19");
