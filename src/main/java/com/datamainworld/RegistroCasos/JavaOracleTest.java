@@ -1,3 +1,5 @@
+package com.datamainworld.RegistroCasos;
+
 import java.sql.*;
 
 public class JavaOracleTest {
