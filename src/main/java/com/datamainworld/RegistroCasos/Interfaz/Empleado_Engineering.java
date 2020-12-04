@@ -42,7 +42,7 @@ public class Empleado_Engineering extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Empleado de √Årea de Ingenier√≠a");
+        jLabel1.setText("Empleado de ¡rea de IngenierÌa");
 
         jButton1.setText("Revisar solicitud");
 
@@ -56,6 +56,11 @@ public class Empleado_Engineering extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jList1);
 
         jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Actualizar solicitud");
 
@@ -132,6 +137,10 @@ public class Empleado_Engineering extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
