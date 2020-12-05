@@ -122,7 +122,7 @@ public class Login extends javax.swing.JFrame {
         Connection connection = new OracleConecction().conectar();
         System.out.println("Conectado a la BD");
 
-        String sqlLogin = "SELECT CORREO, COD_EMPLEADO FROM EMPLEADO WHERE CORREO='"+usuario+"'";
+        String sqlLogin = "SELECT * FROM USUARIO WHERE USERNAME='"+usuario+"'";
 
         try {
             Statement statement = connection.createStatement();
@@ -130,10 +130,10 @@ public class Login extends javax.swing.JFrame {
             ResultSet result = statement.executeQuery(sqlLogin);
 
             if(result.next()) {
-                if(result.getString(2).equalsIgnoreCase(password)){
+                if(result.getString("PASSWORD").equalsIgnoreCase(password)){
                     System.out.println("Login correcto");
                 }else{
-                    System.out.println("Contraseña incorrecta");
+                    System.out.println("Password incorrecta");
                 }
             }else{
                 System.out.println("El usuario ingresado no existe");
