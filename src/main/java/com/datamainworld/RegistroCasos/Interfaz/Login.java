@@ -5,6 +5,13 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author vgabr
@@ -37,7 +44,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("BANCO BBVA PERÚ");
+        jLabel1.setText("BANCO BBVA PERU");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -47,9 +54,14 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Usuario:");
 
-        jLabel3.setText("Contraseña:");
+        jLabel3.setText("Contrase�a:");
 
         jButton1.setText("Ingresar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jPasswordField1.setText("jPasswordField1");
 
@@ -100,6 +112,38 @@ public class Login extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String usuario = jTextField1.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+
+        //Conectarse a la BD
+        Connection connection = new OracleConecction().conectar();
+        System.out.println("Conectado a la BD");
+
+        String sqlLogin = "SELECT CORREO, COD_EMPLEADO FROM EMPLEADO WHERE CORREO='"+usuario+"'";
+
+        try {
+            Statement statement = connection.createStatement();
+
+            ResultSet result = statement.executeQuery(sqlLogin);
+
+            if(result.next()) {
+                if(result.getString(2).equalsIgnoreCase(password)){
+                    System.out.println("Login correcto");
+                }else{
+                    System.out.println("Contraseña incorrecta");
+                }
+            }else{
+                System.out.println("El usuario ingresado no existe");
+            }
+
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
