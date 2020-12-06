@@ -150,8 +150,6 @@ public class Login extends javax.swing.JFrame {
                     System.out.println("Login correcto");
                     JOptionPane.showMessageDialog(null,"Login correcto");
 
-
-
                 }else{
                     System.out.println("Password incorrecta");
                     JOptionPane.showMessageDialog(null,"Password incorrecto");
