@@ -127,8 +127,31 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
         // TODO add your handling code here:
         Solicitud objSol = new Solicitud();
         objSol.setVisible(true);
+        this.setVisible(false);
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        Solicitud_Ver objSV = new Solicitud_Ver();
+        objSV.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        DerivarSolicitud objDS = new DerivarSolicitud();
+        objDS.setVisible(true);
+        this.setVisible(false);
+    }
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        Solicitud_Inicidencia objSI = new Solicitud_Inicidencia();
+        objSI.setVisible(true);
+        this.setVisible(false);
+    }
+
 
     /**
      * @param args the command line arguments

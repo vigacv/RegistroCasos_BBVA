@@ -143,6 +143,14 @@ public class Empleado_Engineering extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // TODO add your handling code here:
+        Solicitud_Inicidencia_Ver objSIV = new Solicitud_Inicidencia_Ver();
+        objSIV.setVisible(true);
+        this.setVisible(false);
+    }
+
+
     /**
      * @param args the command line arguments
      */
