@@ -43,9 +43,14 @@ public class Empleado_Engineering extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Empleado de ï¿½rea de Ingenierï¿½a");
+        jLabel1.setText("Empleado de Área de Ingeniería");
 
         jButton1.setText("Revisar solicitud");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Actualizar solicitud");
 
@@ -143,13 +148,12 @@ public class Empleado_Engineering extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         Solicitud_Inicidencia_Ver objSIV = new Solicitud_Inicidencia_Ver();
         objSIV.setVisible(true);
         this.setVisible(false);
-    }
-
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
