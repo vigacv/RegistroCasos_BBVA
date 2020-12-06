@@ -16,6 +16,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
      */
     public Solicitud_Inicidencia_Ver() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -89,7 +90,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Solicitud N° ");
+        jLabel1.setText("Solicitud Nï¿½ ");
 
         jTextField5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -239,7 +240,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Descripción");
+        jLabel9.setText("Descripciï¿½n");
 
         jTextField3.setToolTipText("");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -267,7 +268,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel14.setText("Nombre de archivo");
 
         jLabel15.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel15.setText("Título del enlace");
+        jLabel15.setText("Tï¿½tulo del enlace");
 
         jLabel17.setForeground(new java.awt.Color(51, 153, 255));
         jLabel17.setText("No adjuntar");
@@ -281,7 +282,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel25.setText("Momento");
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Configuración");
+        jLabel26.setText("Configuraciï¿½n");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -309,7 +310,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sí");
+        jRadioButton1.setText("Sï¿½");
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("No");
@@ -545,7 +546,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
         jTextField6.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setText("Gestión de incidencia");
+        jTextField6.setText("Gestiï¿½n de incidencia");
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);

@@ -21,6 +21,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
      */
     public Registro_EmpleadoClientSolution() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

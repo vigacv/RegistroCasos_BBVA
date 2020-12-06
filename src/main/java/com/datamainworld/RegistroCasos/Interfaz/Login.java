@@ -7,6 +7,7 @@ package com.datamainworld.RegistroCasos.Interfaz;
 
 import com.datamainworld.RegistroCasos.OracleConecction;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -131,12 +133,32 @@ public class Login extends javax.swing.JFrame {
 
             if(result.next()) {
                 if(result.getString("PASSWORD").equalsIgnoreCase(password)){
+                    if (usuario.equalsIgnoreCase("UsuarioCliSol"))
+                    {
+                        Empleado_ClientSolution objCS = new Empleado_ClientSolution();
+                        objCS.setVisible(true);
+                        this.setVisible(false);
+                    }
+
+                    else
+                    {
+                        Empleado_Engineering objEng = new Empleado_Engineering();
+                        objEng.setVisible(true);
+                        this.setVisible(false);
+                    }
+
                     System.out.println("Login correcto");
+                    JOptionPane.showMessageDialog(null,"Login correcto");
+
+
+
                 }else{
                     System.out.println("Password incorrecta");
+                    JOptionPane.showMessageDialog(null,"Password incorrecto");
                 }
             }else{
                 System.out.println("El usuario ingresado no existe");
+                JOptionPane.showMessageDialog(null,"El usuario ingresado no existe");
             }
 
             connection.close();

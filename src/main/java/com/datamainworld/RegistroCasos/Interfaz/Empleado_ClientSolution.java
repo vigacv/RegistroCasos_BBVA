@@ -16,6 +16,7 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
      */
     public Empleado_ClientSolution() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

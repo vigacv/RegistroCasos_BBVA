@@ -16,6 +16,7 @@ public class Empleado_Engineering extends javax.swing.JFrame {
      */
     public Empleado_Engineering() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -42,7 +43,7 @@ public class Empleado_Engineering extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Empleado de Área de Ingeniería");
+        jLabel1.setText("Empleado de ï¿½rea de Ingenierï¿½a");
 
         jButton1.setText("Revisar solicitud");
 

@@ -16,6 +16,7 @@ public class DerivarSolicitud extends javax.swing.JFrame {
      */
     public DerivarSolicitud() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

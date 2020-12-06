@@ -16,6 +16,7 @@ public class Solicitud extends javax.swing.JFrame {
      */
     public Solicitud() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**

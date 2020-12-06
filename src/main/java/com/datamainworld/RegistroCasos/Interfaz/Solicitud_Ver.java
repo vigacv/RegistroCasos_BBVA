@@ -16,6 +16,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
      */
     public Solicitud_Ver() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
