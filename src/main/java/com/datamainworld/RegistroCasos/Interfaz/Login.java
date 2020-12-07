@@ -131,18 +131,25 @@ public class Login extends javax.swing.JFrame {
 
             if(result.next()) {
                 if(result.getString("PASSWORD").equalsIgnoreCase(password)){
-                    if (usuario.equalsIgnoreCase("UsuarioCliSol"))
-                    {
-                        Empleado_ClientSolution objCS = new Empleado_ClientSolution();
-                        objCS.setVisible(true);
-                        this.setVisible(false);
-                    }
+                    String cod_emp = result.getString("COD_EMPLEADO");
+                    String sqlEmp = "SELECT * FROM EMPLEADO WHERE COD_EMPLEADO='"+cod_emp+"'";
 
-                    else
-                    {
-                        Empleado_Engineering objEng = new Empleado_Engineering();
-                        objEng.setVisible(true);
-                        this.setVisible(false);
+                    ResultSet result2 = statement.executeQuery(sqlEmp);
+                    if(result2.next()){
+                        if (result2.getString("COD_ÁREA").equalsIgnoreCase("1"))
+                        {
+                            Empleado_ClientSolution objCS = new Empleado_ClientSolution();
+                            objCS.setVisible(true);
+                            this.setVisible(false);
+                        }
+
+                        else
+                        {
+                            Empleado_Engineering objEng = new Empleado_Engineering();
+                            objEng.setVisible(true);
+                            this.setVisible(false);
+                        }
+
                     }
 
                     System.out.println("Login correcto");
