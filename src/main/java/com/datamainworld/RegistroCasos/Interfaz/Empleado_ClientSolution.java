@@ -5,6 +5,15 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+import jdk.swing.interop.SwingInterOpUtils;
+
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author PC
@@ -14,9 +23,35 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
     /**
      * Creates new form Empleado_ClientSolution
      */
+    private DefaultListModel modelList(String codEmp){
+        DefaultListModel model = new DefaultListModel<>();
+        Connection connection = new OracleConecction().conectar();
+
+        String sql = "SELECT * FROM SOLICITUD_EMPLEADO WHERE COD_EMPLEADO='"+codEmp+"'";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while(result.next()){
+                String codSol = result.getString("COD_SOLICITUD");
+                model.addElement("Solicitud " + codSol);
+            }
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return model;
+    }
+
     public Empleado_ClientSolution() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public Empleado_ClientSolution(String codigoEmp){
+        initComponents();
+        this.setLocationRelativeTo(null);
+        jList1.setModel(modelList(codigoEmp));
     }
 
     /**
@@ -143,12 +178,13 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
         Solicitud objSol = new Solicitud();
         objSol.setVisible(true);
         this.setVisible(false);
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        Solicitud_Ver objSV = new Solicitud_Ver();
+        String solicitudSelec = jList1.getSelectedValue();
+        char indiceSolSelec = solicitudSelec.charAt(solicitudSelec.length()-1);
+        Solicitud_Ver objSV = new Solicitud_Ver(Character.getNumericValue(indiceSolSelec));
         objSV.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed

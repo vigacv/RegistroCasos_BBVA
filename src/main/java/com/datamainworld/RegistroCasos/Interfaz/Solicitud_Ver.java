@@ -5,6 +5,14 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
+import javax.xml.transform.Result;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author vgabr
@@ -14,9 +22,59 @@ public class Solicitud_Ver extends javax.swing.JFrame {
     /**
      * Creates new form Solicitud
      */
+    private void llenarInfoSolicitud(int codSolicitud){
+        jTextField5.setText(String.valueOf(codSolicitud));
+
+        Connection connection = new OracleConecction().conectar();
+
+        String sqlSolicitud = "SELECT * FROM SOLICITUD WHERE COD_SOLICITUD='"+codSolicitud+"'";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sqlSolicitud);
+
+
+            if(result.next()){
+                //Llenar datos de la tabla solicitud
+                String desc = result.getString("DESCRIPCION");
+                jTextField3.setText(desc);
+
+                jTextField6.setText(result.getString("STATUS"));
+
+                //Llenar datos de la tabla problema
+                String codProblema = result.getString("COD_PROBLEMA");
+                String sqlProblema = "SELECT * FROM PROBLEMA WHERE COD_PROBLEMA='"+codProblema+"'";
+
+                ResultSet result2 = statement.executeQuery(sqlProblema);
+                if(result2.next()) {
+                    jComboBox2.addItem(result2.getString("FUENTE"));
+                    jTextField10.setText(result2.getString("FECHA"));
+                    jTextField8.setText(result2.getString("HORA"));
+
+                    //Llenar datos de la tabla error
+                    String codError = result2.getString("COD_PROBLEMA");
+                    String sqlError = "SELECT * FROM ERROR WHERE COD_ERROR='"+codError+"'";
+                    ResultSet result3 = statement.executeQuery(sqlError);
+                    if (result3.next()){
+                        jTextField9.setText(result3.getString("NOMBRE"));
+                        jComboBox5.addItem(result3.getString("SERVICIO"));
+                        jComboBox6.addItem(result3.getString("CANAL"));
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public Solicitud_Ver() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public Solicitud_Ver(int codSolicitud){
+        initComponents();
+        this.setLocationRelativeTo(null);
+        llenarInfoSolicitud(codSolicitud);
     }
 
     /**
@@ -70,7 +128,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Solicitud N° ");
+        jLabel1.setText("Solicitud N� ");
 
         jTextField5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -154,7 +212,6 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("Fuente");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -268,7 +325,6 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel22.setText("Nombre");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -287,7 +343,6 @@ public class Solicitud_Ver extends javax.swing.JFrame {
             }
         });
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox6ActionPerformed(evt);
@@ -334,7 +389,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         );
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("Descripción del caso:");
+        jLabel8.setText("Descripci�n del caso:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");

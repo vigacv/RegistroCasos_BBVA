@@ -138,7 +138,7 @@ public class Login extends javax.swing.JFrame {
                     if(result2.next()){
                         if (result2.getString("COD_ÁREA").equalsIgnoreCase("1"))
                         {
-                            Empleado_ClientSolution objCS = new Empleado_ClientSolution();
+                            Empleado_ClientSolution objCS = new Empleado_ClientSolution(cod_emp);
                             objCS.setVisible(true);
                             this.setVisible(false);
                         }
