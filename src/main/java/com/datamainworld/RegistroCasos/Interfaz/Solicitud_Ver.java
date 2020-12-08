@@ -60,6 +60,12 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                         if(resultEmpresa.next()){
                             jComboBox4.addItem(resultEmpresa.getString("NOMBRE"));
                         }
+                        //Llenar los demas contactos
+                        String sqlOtrosContactos = "SELECT * FROM CONTACTO WHERE COD_EMPRESA='"+codEmpresa+"'";
+                        ResultSet resultOtrosContactos = statement.executeQuery(sqlOtrosContactos);
+                        while (resultOtrosContactos.next()){
+                            jComboBox1.addItem(resultOtrosContactos.getString("NOMBRE"));
+                        }
                     }
                 }
 
@@ -98,6 +104,49 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         }
     }
 
+    private void llenarCombos(){
+        //Llenar empresas
+        String sql = "SELECT DISTINCT(NOMBRE) FROM EMPRESA";
+        Connection connection = new OracleConecction().conectar();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while(result.next()){
+                String nombreEmpresa = result.getString("NOMBRE");
+                if(!String.valueOf(jComboBox4.getSelectedItem()).equalsIgnoreCase(nombreEmpresa)) {
+                    jComboBox4.addItem(nombreEmpresa);
+                }
+            }
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        //Llenar los otros combos en duro (sin consultar a bd)
+        String[] fuentes = {"Call Center", "Cliente directamente", "Mail Center", "Digital Trainer", "Oficina"};
+        for(String fuente: fuentes){
+            if(!String.valueOf(jComboBox2.getSelectedItem()).equalsIgnoreCase(fuente)){
+                jComboBox2.addItem(fuente);
+            }
+        }
+
+        String[] servicios = {"Pagos masivos por horarios", "Apoyo temas generales","Debito automatico","Gestion de implementacion","Modificacion",
+        "Pagos Recibidos","Gestion de implementacion", "Apoyo temas generales","Carta fianza","Chequeras", "Cobros/Comisiones","Comercio exterior",
+        "Bloque por visalert o deuda","Fast cash","Factoring","Leasing","Phishing","T - Cambio","Transferencia la exterior","Validacion de cuentas",
+        "MT101","MT940"};
+        for(String servicio: servicios){
+            if(!String.valueOf(jComboBox5.getSelectedItem()).equalsIgnoreCase(servicio)){
+                jComboBox5.addItem(servicio);
+            }
+        }
+
+        String[] canales = {"H2H", "Recaudos","Interconexion","BBVA Net Cash","Swift","Global Net Cash","Fast Track Empresas"};
+        for(String canal: canales){
+            if(!String.valueOf(jComboBox6.getSelectedItem()).equalsIgnoreCase(canal)){
+                jComboBox6.addItem(canal);
+            }
+        }
+    }
+
     public Solicitud_Ver() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -107,6 +156,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         llenarInfoSolicitud(codSolicitud);
+        llenarCombos();
     }
 
     /**
@@ -417,7 +467,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         );
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("Descripción del caso:");
+        jLabel8.setText("Descripciï¿½n del caso:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");

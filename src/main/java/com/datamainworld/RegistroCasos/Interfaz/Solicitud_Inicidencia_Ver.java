@@ -61,6 +61,12 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         if(resultEmpresa.next()){
                             jComboBox4.addItem(resultEmpresa.getString("NOMBRE"));
                         }
+                        //Llenar los demas contactos
+                        String sqlOtrosContactos = "SELECT * FROM CONTACTO WHERE COD_EMPRESA='"+codEmpresa+"'";
+                        ResultSet resultOtrosContactos = statement.executeQuery(sqlOtrosContactos);
+                        while (resultOtrosContactos.next()){
+                            jComboBox1.addItem(resultOtrosContactos.getString("NOMBRE"));
+                        }
                     }
                 }
 
@@ -113,6 +119,23 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         }
     }
 
+    private void llenarCombos(){
+        //Llenar empresas
+        String sql = "SELECT DISTINCT(NOMBRE) FROM EMPRESA";
+        Connection connection = new OracleConecction().conectar();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while(result.next()){
+                jComboBox4.addItem(result.getString("NOMBRE"));
+            }
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        //Llenar los otros combos en duro (sin consultar a bd)
+    }
+
     public Solicitud_Inicidencia_Ver() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -122,6 +145,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         llenarInfoSolicitudIncidencia(codSolicitud);
+        llenarCombos();
     }
 
     /**
