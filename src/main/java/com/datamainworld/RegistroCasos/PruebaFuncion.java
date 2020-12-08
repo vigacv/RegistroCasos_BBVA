@@ -25,6 +25,8 @@ public class PruebaFuncion {
             int output = callableStatement.getInt(1);
 
             System.out.println("Resultado de la funcion: " + output);
+
+            connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
