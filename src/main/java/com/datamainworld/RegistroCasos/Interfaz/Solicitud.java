@@ -5,12 +5,10 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -129,7 +127,7 @@ public class Solicitud extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Solicitud N° ");
+        jLabel1.setText("Solicitud Nï¿½ ");
 
         jTextField5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -140,7 +138,7 @@ public class Solicitud extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel1.setForeground(new java.awt.Color(102, 255, 255));
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel1.setEnabled(false);
@@ -200,7 +198,7 @@ public class Solicitud extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel2.setForeground(new java.awt.Color(102, 255, 255));
         jPanel2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel2.setEnabled(false);
@@ -275,7 +273,7 @@ public class Solicitud extends javax.swing.JFrame {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel3.setForeground(new java.awt.Color(102, 255, 255));
         jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel3.setEnabled(false);
@@ -316,7 +314,7 @@ public class Solicitud extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel7.setText("Error:");
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel4.setForeground(new java.awt.Color(102, 255, 255));
         jPanel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel4.setEnabled(false);
@@ -394,13 +392,18 @@ public class Solicitud extends javax.swing.JFrame {
         );
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("Descripción del caso:");
+        jLabel8.setText("Descripciï¿½n del caso:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton1.setText("Registrar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setText("Fecha inicio:");
@@ -587,6 +590,53 @@ public class Solicitud extends javax.swing.JFrame {
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String status = String.valueOf(jComboBox3.getSelectedItem());
+        String descripcion = jTextField3.getText();
+
+        //Datos de empresa y contacto
+        String empresa = String.valueOf(BoxEmpresa.getSelectedItem());
+        String contacto = String.valueOf(BoxContacto.getSelectedItem());
+
+        //Datos de problema
+        String fuente = String.valueOf(jComboBox2.getSelectedItem());
+        String fecha = jTextField10.getText();
+        String hora = jTextField8.getText();
+
+        //Datos de error
+        String nombreErrror = String.valueOf(jComboBox7.getSelectedItem());
+        String servicio = String.valueOf(jComboBox5.getSelectedItem());
+        String canal = String.valueOf(jComboBox6.getSelectedItem());
+
+
+        Connection connection = new OracleConecction().conectar();
+        String sql = "{call INSERTARSOLICITUD(?, ?, null, null, null, null, ?, null, ?, ?, ?)}";
+
+        try {
+            CallableStatement callableStatement = connection.prepareCall(sql);
+            System.out.println("Procedimiento preparado.");
+
+            callableStatement.setString(1,descripcion);
+            callableStatement.setString(2,status);
+            callableStatement.setString(3,fuente);
+            callableStatement.setString(4, nombreErrror);
+            callableStatement.setString(5,servicio);
+            callableStatement.setString(6, canal);
+
+            System.out.println("Parametros establecidos.");
+
+            System.out.println("Ejecutando procedimiento...");
+
+            callableStatement.execute();
+
+            System.out.println("Procedimiento ejecutado correctamente");
+
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
