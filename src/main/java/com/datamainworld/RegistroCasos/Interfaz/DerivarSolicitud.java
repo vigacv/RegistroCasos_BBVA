@@ -31,6 +31,29 @@ public class DerivarSolicitud extends javax.swing.JFrame {
 
     private HashMap<String, String> dictionary;
     private int codSolicitud;
+    private String codIncidencia;
+
+    private void actualizarDatosIncidencia(){
+        Connection connection = new OracleConecction().conectar();
+
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            String conf ="";
+            if(jRadioButton1.isSelected()){
+                conf = "SI";
+            }else if(jRadioButton2.isSelected()){
+                conf="NO";
+            }
+
+            String sqlUpdate = "UPDATE INCIDENCIA SET MOMENTO='"+String.valueOf(jComboBox7.getSelectedItem())+
+                    "', CONF='"+conf+"' WHERE COD_INCIDENCIA='"+codIncidencia+"'";
+
+            statement.executeUpdate(sqlUpdate);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
 
     private void llenarComboEmpleados(){
         String sql = "SELECT * FROM EMPLEADO WHERE COD_AREA='2'";
@@ -53,6 +76,40 @@ public class DerivarSolicitud extends javax.swing.JFrame {
         }
     }
 
+    private void llenarDatosIncidencia(){
+        String sql = "SELECT * FROM SOLICITUD WHERE COD_SOLICITUD='"+codSolicitud+"'";
+
+        Connection connection = new OracleConecction().conectar();
+
+        try {
+            Statement statement = connection.createStatement();
+
+            ResultSet result = statement.executeQuery(sql);
+            if(result.next()){
+                codIncidencia = result.getString("COD_INCIDENCIA");
+
+                String sqlIncidencia = "SELECT * FROM INCIDENCIA WHERE COD_INCIDENCIA='"+codIncidencia+"'";
+
+                ResultSet result2 = statement.executeQuery(sqlIncidencia);
+
+                if(result2.next()){
+                    jComboBox7.setSelectedItem(result2.getString("MOMENTO"));
+
+                    String conf = result2.getString("CONF");
+                    if(conf.equalsIgnoreCase("SI")){
+                        jRadioButton1.setSelected(true);
+                    }else{
+                        jRadioButton2.setSelected(true);
+                    }
+                }
+            }
+
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public DerivarSolicitud(int codSolicitud){
         this.codSolicitud = codSolicitud;
         initComponents();
@@ -60,6 +117,7 @@ public class DerivarSolicitud extends javax.swing.JFrame {
         jTextField1.setText(String.valueOf(codSolicitud));
         this.dictionary = new HashMap<>();
         llenarComboEmpleados();
+        llenarDatosIncidencia();
     }
 
     /**
@@ -201,9 +259,13 @@ public class DerivarSolicitud extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);
 
+            connection.close();
+
+            actualizarDatosIncidencia();
+
             JOptionPane.showMessageDialog(null,"Solicitud derivada correctamente");
 
-            connection.close();
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
