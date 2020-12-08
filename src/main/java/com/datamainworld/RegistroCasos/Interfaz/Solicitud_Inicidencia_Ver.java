@@ -40,7 +40,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
                 jTextField3.setText(desc);
 
-                jTextField6.setText(result.getString("STATUS"));
+                jComboBox3.addItem(result.getString("STATUS"));
 
                 //Llenar datos de empresa y contacto
                 String sqlSolContacto = "SELECT * FROM SOLICITUD_CONTACTO WHERE COD_SOLICITUD='"+codSolicitud+"'";
@@ -99,7 +99,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                     String sqlError = "SELECT * FROM ERROR WHERE COD_ERROR='"+codError+"'";
                     ResultSet result3 = statement.executeQuery(sqlError);
                     if (result3.next()){
-                        jTextField9.setText(result3.getString("NOMBRE"));
+                        jComboBox8.addItem(result3.getString("NOMBRE"));
                         jComboBox5.addItem(result3.getString("SERVICIO"));
                         jComboBox6.addItem(result3.getString("CANAL"));
                     }
@@ -137,6 +137,22 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             throwables.printStackTrace();
         }
         //Llenar los otros combos en duro (sin consultar a bd)
+        String[] statuses = {"Pendiente","Cerrado","Gestion de Incidencias","Reabierto"};
+        for(String status: statuses){
+            if(!String.valueOf(jComboBox3.getSelectedItem()).equalsIgnoreCase(status)){
+                jComboBox3.addItem(status);
+            }
+        }
+
+        String[] errores = {"Solicitud de financiamiento de import (COMEX)","Pop up de freemium","Credito liquido","Consulta si un usuario tiene permiso",
+                "Consulta de usuario por empresa","Sing off de boveda","Consulta de usuario detallada","Modificacion de usuario","Validacion de acceso cliente",
+                "Desbloqueo de  token helpdsk","Registro intento de log in en auditoria"};
+        for(String error: errores){
+            if(!String.valueOf(jComboBox8.getSelectedItem()).equalsIgnoreCase(error)){
+                jComboBox8.addItem(error);
+            }
+        }
+
         String[] fuentes = {"Call Center", "Cliente directamente", "Mail Center", "Digital Trainer", "Oficina"};
         for(String fuente: fuentes){
             if(!String.valueOf(jComboBox2.getSelectedItem()).equalsIgnoreCase(fuente)){
@@ -158,6 +174,13 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         for(String canal: canales){
             if(!String.valueOf(jComboBox6.getSelectedItem()).equalsIgnoreCase(canal)){
                 jComboBox6.addItem(canal);
+            }
+        }
+
+        String[] momentos = {"preparacion","validacion","autorizacion","en resultado"};
+        for(String momento: momentos){
+            if(!String.valueOf(jComboBox7.getSelectedItem()).equalsIgnoreCase(momento)){
+                jComboBox7.addItem(momento);
             }
         }
     }
@@ -229,8 +252,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jComboBox5 = new javax.swing.JComboBox<>();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
         jComboBox6 = new javax.swing.JComboBox<>();
+        jComboBox8 = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel8 = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
@@ -239,8 +262,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         jTextField11 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jTextField6 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        jComboBox3 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -407,7 +430,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Descripción");
+        jLabel9.setText("DescripciOn");
 
         jTextField3.setToolTipText("");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -435,7 +458,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel14.setText("Nombre de archivo");
 
         jLabel15.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel15.setText("Título del enlace");
+        jLabel15.setText("Tï¿½tulo del enlace");
 
         jLabel17.setForeground(new java.awt.Color(51, 153, 255));
         jLabel17.setText("No adjuntar");
@@ -449,7 +472,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel25.setText("Momento");
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Configuración");
+        jLabel26.setText("Configuracion");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -476,7 +499,12 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sí");
+        jRadioButton1.setText("Si");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("No");
@@ -627,12 +655,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel24.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel24.setText("Canal");
 
-        jTextField9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField9ActionPerformed(evt);
-            }
-        });
-
         jComboBox6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox6ActionPerformed(evt);
@@ -648,8 +670,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel22)
-                        .addGap(14, 14, 14)
-                        .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox8, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel23)
@@ -657,16 +679,17 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel22)
-                    .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -708,15 +731,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jButton2.setText("Modificar");
 
-        jTextField6.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setText("Gestion de incidencia");
-        jTextField6.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField6ActionPerformed(evt);
-            }
-        });
-
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");
 
@@ -733,8 +747,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -775,19 +789,21 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                        .addComponent(jLabel4)
-                        .addComponent(jTextField6))
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(8, 8, 8)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -810,7 +826,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                     .addComponent(jTextField10)
                     .addComponent(jLabel16)
                     .addComponent(jTextField11))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         jPanel1.getAccessibleContext().setAccessibleDescription("");
@@ -837,10 +853,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox5ActionPerformed
-
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
         // TODO add your handling code here:
@@ -870,10 +882,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         System.out.println("aea");
     }//GEN-LAST:event_jLabel17MouseClicked
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
-
     private void jTextField12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField12ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField12ActionPerformed
@@ -897,6 +905,10 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         Contacto temp = new Contacto(jComboBox1.getSelectedItem().toString());
         temp.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -944,10 +956,12 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JComboBox<String> jComboBox5;
     private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
+    private javax.swing.JComboBox<String> jComboBox8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -991,9 +1005,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
     // End of variables declaration//GEN-END:variables
 }
