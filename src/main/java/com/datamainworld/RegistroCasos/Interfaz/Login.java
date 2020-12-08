@@ -149,7 +149,7 @@ public class Login extends javax.swing.JFrame {
                             this.setVisible(false);
                         }
                         else{
-                            Administrador temp = new Administrador(cod_emp);
+                            Administrador temp = new Administrador();
                             temp.setVisible(true);
                             this.setVisible(false);
                                 }
