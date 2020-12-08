@@ -145,7 +145,7 @@ public class Login extends javax.swing.JFrame {
 
                         else
                         {
-                            Empleado_Engineering objEng = new Empleado_Engineering();
+                            Empleado_Engineering objEng = new Empleado_Engineering(cod_emp);
                             objEng.setVisible(true);
                             this.setVisible(false);
                         }

@@ -40,6 +40,8 @@ public class Solicitud_Ver extends javax.swing.JFrame {
 
                 jTextField6.setText(result.getString("STATUS"));
 
+                //TODO Llenar datos de empresa y contacto
+
                 //Llenar datos de la tabla problema
                 String codProblema = result.getString("COD_PROBLEMA");
                 String sqlProblema = "SELECT * FROM PROBLEMA WHERE COD_PROBLEMA='"+codProblema+"'";
@@ -60,6 +62,8 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                         jComboBox6.addItem(result3.getString("CANAL"));
                     }
                 }
+
+                connection.close();
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();

@@ -5,6 +5,14 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author PC
@@ -14,9 +22,36 @@ public class Empleado_Engineering extends javax.swing.JFrame {
     /**
      * Creates new form Empleado_Engineering
      */
+
+    private DefaultListModel modelList(String codEmp){
+        DefaultListModel model = new DefaultListModel<>();
+        Connection connection = new OracleConecction().conectar();
+
+        String sql = "SELECT * FROM SOLICITUD_EMPLEADO WHERE COD_EMPLEADO='"+codEmp+"'";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while(result.next()){
+                String codSol = result.getString("COD_SOLICITUD");
+                model.addElement("Solicitud " + codSol);
+            }
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return model;
+    }
+
     public Empleado_Engineering() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public Empleado_Engineering(String codigoEmp) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        jList1.setModel(modelList(codigoEmp));
     }
 
     /**
@@ -43,7 +78,7 @@ public class Empleado_Engineering extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Empleado de Área de Ingeniería");
+        jLabel1.setText("Empleado de Area de Ingenieria");
 
         jButton1.setText("Revisar solicitud");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -149,8 +184,8 @@ public class Empleado_Engineering extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        Solicitud_Inicidencia_Ver objSIV = new Solicitud_Inicidencia_Ver();
+        String solicitudSeleccionada = jList1.getSelectedValue();
+        Solicitud_Inicidencia_Ver objSIV = new Solicitud_Inicidencia_Ver(Character.getNumericValue(solicitudSeleccionada.charAt(solicitudSeleccionada.length()-1)));
         objSIV.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed

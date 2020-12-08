@@ -5,6 +5,13 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 /**
  *
  * @author vgabr
@@ -14,9 +21,87 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
     /**
      * Creates new form Solicitud
      */
+    private void llenarInfoSolicitudIncidencia(int codSolicitud){
+        jTextField5.setText(String.valueOf(codSolicitud));
+
+        Connection connection = new OracleConecction().conectar();
+
+        String sqlSolicitud = "SELECT * FROM SOLICITUD WHERE COD_SOLICITUD='"+codSolicitud+"'";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sqlSolicitud);
+
+
+            if(result.next()){
+                //Llenar datos de la tabla solicitud
+                String desc = result.getString("DESCRIPCION");
+                String codProblema = result.getString("COD_PROBLEMA");
+
+                jTextField3.setText(desc);
+
+                jTextField6.setText(result.getString("STATUS"));
+
+                //TODO Llenar datos de empresa y contacto
+
+                //Llenar datos de la tabla incidencia
+                String codIncidencia = result.getString("COD_INCIDENCIA");
+                String sqlIncidencia = "SELECT * FROM INCIDENCIA WHERE COD_INCIDENCIA='"+codIncidencia+"'";
+                ResultSet resultInc = statement.executeQuery(sqlIncidencia);
+                if(resultInc.next()){
+                    jTextField12.setText(resultInc.getString("FECHA_INICIO"));
+                    jTextField13.setText(resultInc.getString("FECHA_CIERRE"));
+                    jComboBox7.addItem(resultInc.getString("MOMENTO"));
+                    String conf = resultInc.getString("CONF");
+                    if(conf.equalsIgnoreCase("SI")) {
+                        jRadioButton1.setSelected(true);
+                    }else{
+                        jRadioButton2.setSelected(true);
+                    }
+                }
+
+                //Llenar datos de la tabla problema
+                String sqlProblema = "SELECT * FROM PROBLEMA WHERE COD_PROBLEMA='"+codProblema+"'";
+
+                ResultSet result2 = statement.executeQuery(sqlProblema);
+                if(result2.next()) {
+                    jComboBox2.addItem(result2.getString("FUENTE"));
+                    jTextField7.setText(result2.getString("FECHA"));
+                    jTextField8.setText(result2.getString("HORA"));
+
+                    //Llenar datos de la tabla error
+                    String codError = result2.getString("COD_PROBLEMA");
+                    String sqlError = "SELECT * FROM ERROR WHERE COD_ERROR='"+codError+"'";
+                    ResultSet result3 = statement.executeQuery(sqlError);
+                    if (result3.next()){
+                        jTextField9.setText(result3.getString("NOMBRE"));
+                        jComboBox5.addItem(result3.getString("SERVICIO"));
+                        jComboBox6.addItem(result3.getString("CANAL"));
+                    }
+                }
+
+                String sqlSolEmp = "SELECT * FROM SOLICITUD_EMPLEADO WHERE COD_SOLICITUD='"+codSolicitud+"'";
+                ResultSet resultSolEmp = statement.executeQuery(sqlSolEmp);
+                if(resultSolEmp.next()){
+                    jTextField10.setText(resultSolEmp.getString("FECHA_INICIO"));
+                    jTextField11.setText(resultSolEmp.getString("FECHA_CIERRE"));
+                }
+
+                connection.close();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public Solicitud_Inicidencia_Ver() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    public Solicitud_Inicidencia_Ver(int codSolicitud){
+        initComponents();
+        this.setLocationRelativeTo(null);
+        llenarInfoSolicitudIncidencia(codSolicitud);
     }
 
     /**
@@ -90,7 +175,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Solicitud Nï¿½ ");
+        jLabel1.setText("Solicitud Num ");
 
         jTextField5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -171,7 +256,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel6.setText("Fuente");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -240,7 +324,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Descripciï¿½n");
+        jLabel9.setText("Descripción");
 
         jTextField3.setToolTipText("");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -268,7 +352,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel14.setText("Nombre de archivo");
 
         jLabel15.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel15.setText("Tï¿½tulo del enlace");
+        jLabel15.setText("Título del enlace");
 
         jLabel17.setForeground(new java.awt.Color(51, 153, 255));
         jLabel17.setText("No adjuntar");
@@ -282,7 +366,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel25.setText("Momento");
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Configuraciï¿½n");
+        jLabel26.setText("Configuración");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -302,7 +386,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox7ActionPerformed(evt);
@@ -310,7 +393,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sï¿½");
+        jRadioButton1.setText("Sí");
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("No");
@@ -449,7 +532,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel22.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel22.setText("Nombre");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox5ActionPerformed(evt);
@@ -468,7 +550,6 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             }
         });
 
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox6ActionPerformed(evt);
@@ -546,7 +627,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
         jTextField6.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
         jTextField6.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField6.setText("Gestiï¿½n de incidencia");
+        jTextField6.setText("Gestion de incidencia");
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);
@@ -623,7 +704,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -646,7 +727,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                     .addComponent(jTextField10)
                     .addComponent(jLabel16)
                     .addComponent(jTextField11))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         jPanel1.getAccessibleContext().setAccessibleDescription("");
