@@ -127,13 +127,39 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while(result.next()){
-                jComboBox4.addItem(result.getString("NOMBRE"));
+                String nombreEmpresa = result.getString("NOMBRE");
+                if(!String.valueOf(jComboBox4.getSelectedItem()).equalsIgnoreCase(nombreEmpresa)) {
+                    jComboBox4.addItem(nombreEmpresa);
+                }
             }
             connection.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         //Llenar los otros combos en duro (sin consultar a bd)
+        String[] fuentes = {"Call Center", "Cliente directamente", "Mail Center", "Digital Trainer", "Oficina"};
+        for(String fuente: fuentes){
+            if(!String.valueOf(jComboBox2.getSelectedItem()).equalsIgnoreCase(fuente)){
+                jComboBox2.addItem(fuente);
+            }
+        }
+
+        String[] servicios = {"Pagos masivos por horarios", "Apoyo temas generales","Debito automatico","Gestion de implementacion","Modificacion",
+                "Pagos Recibidos","Gestion de implementacion", "Apoyo temas generales","Carta fianza","Chequeras", "Cobros/Comisiones","Comercio exterior",
+                "Bloque por visalert o deuda","Fast cash","Factoring","Leasing","Phishing","T - Cambio","Transferencia la exterior","Validacion de cuentas",
+                "MT101","MT940"};
+        for(String servicio: servicios){
+            if(!String.valueOf(jComboBox5.getSelectedItem()).equalsIgnoreCase(servicio)){
+                jComboBox5.addItem(servicio);
+            }
+        }
+
+        String[] canales = {"H2H", "Recaudos","Interconexion","BBVA Net Cash","Swift","Global Net Cash","Fast Track Empresas"};
+        for(String canal: canales){
+            if(!String.valueOf(jComboBox6.getSelectedItem()).equalsIgnoreCase(canal)){
+                jComboBox6.addItem(canal);
+            }
+        }
     }
 
     public Solicitud_Inicidencia_Ver() {
@@ -257,13 +283,14 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel19)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jComboBox1, 0, 128, Short.MAX_VALUE)))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
@@ -364,7 +391,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Descripciï¿½n");
+        jLabel9.setText("Descripción");
 
         jTextField3.setToolTipText("");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -392,7 +419,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel14.setText("Nombre de archivo");
 
         jLabel15.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel15.setText("Tï¿½tulo del enlace");
+        jLabel15.setText("Título del enlace");
 
         jLabel17.setForeground(new java.awt.Color(51, 153, 255));
         jLabel17.setText("No adjuntar");
@@ -406,7 +433,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel25.setText("Momento");
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Configuraciï¿½n");
+        jLabel26.setText("Configuración");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -433,7 +460,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sï¿½");
+        jRadioButton1.setText("Sí");
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("No");
@@ -688,10 +715,10 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2)
                                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel8))
+                                    .addComponent(jLabel8)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(29, 29, 29)
