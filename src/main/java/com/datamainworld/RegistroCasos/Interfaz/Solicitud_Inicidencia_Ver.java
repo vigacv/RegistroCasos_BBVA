@@ -888,7 +888,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        Contacto temp = new Contacto(jComboBox1.getSelectedItem().toString());
+        Empresa temp = new Empresa(jComboBox4.getSelectedItem().toString());
         temp.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
