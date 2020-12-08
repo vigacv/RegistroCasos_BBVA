@@ -7,6 +7,7 @@ package com.datamainworld.RegistroCasos.Interfaz;
 
 import com.datamainworld.RegistroCasos.OracleConecction;
 
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -200,7 +201,7 @@ public class DerivarSolicitud extends javax.swing.JFrame {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);
 
-            System.out.println("Solicitud derivada correctamente");
+            JOptionPane.showMessageDialog(null,"Solicitud derivada correctamente");
 
             connection.close();
         } catch (SQLException throwables) {
