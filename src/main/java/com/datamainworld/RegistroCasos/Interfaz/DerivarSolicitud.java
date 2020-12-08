@@ -5,6 +5,16 @@
  */
 package com.datamainworld.RegistroCasos.Interfaz;
 
+import com.datamainworld.RegistroCasos.OracleConecction;
+
+import javax.swing.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Dictionary;
+import java.util.HashMap;
+
 /**
  *
  * @author vgabr
@@ -17,6 +27,97 @@ public class DerivarSolicitud extends javax.swing.JFrame {
     public DerivarSolicitud() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+
+    private HashMap<String, String> dictionary;
+    private int codSolicitud;
+    private String codIncidencia;
+
+    private void actualizarDatosIncidencia(){
+        Connection connection = new OracleConecction().conectar();
+
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            String conf ="";
+            if(jRadioButton1.isSelected()){
+                conf = "SI";
+            }else if(jRadioButton2.isSelected()){
+                conf="NO";
+            }
+
+            String sqlUpdate = "UPDATE INCIDENCIA SET MOMENTO='"+String.valueOf(jComboBox7.getSelectedItem())+
+                    "', CONF='"+conf+"' WHERE COD_INCIDENCIA='"+codIncidencia+"'";
+
+            statement.executeUpdate(sqlUpdate);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private void llenarComboEmpleados(){
+        String sql = "SELECT * FROM EMPLEADO WHERE COD_AREA='2'";
+
+        Connection connection = new OracleConecction().conectar();
+        try {
+            Statement statement = connection.createStatement();
+
+            ResultSet result = statement.executeQuery(sql);
+
+            while(result.next()){
+                String nombreEmpleado = result.getString("NOMBRE");
+                dictionary.put(nombreEmpleado,result.getString("COD_EMPLEADO"));
+                jComboBox2.addItem(nombreEmpleado);
+            }
+
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    private void llenarDatosIncidencia(){
+        String sql = "SELECT * FROM SOLICITUD WHERE COD_SOLICITUD='"+codSolicitud+"'";
+
+        Connection connection = new OracleConecction().conectar();
+
+        try {
+            Statement statement = connection.createStatement();
+
+            ResultSet result = statement.executeQuery(sql);
+            if(result.next()){
+                codIncidencia = result.getString("COD_INCIDENCIA");
+
+                String sqlIncidencia = "SELECT * FROM INCIDENCIA WHERE COD_INCIDENCIA='"+codIncidencia+"'";
+
+                ResultSet result2 = statement.executeQuery(sqlIncidencia);
+
+                if(result2.next()){
+                    jComboBox7.setSelectedItem(result2.getString("MOMENTO"));
+
+                    String conf = result2.getString("CONF");
+                    if(conf.equalsIgnoreCase("SI")){
+                        jRadioButton1.setSelected(true);
+                    }else{
+                        jRadioButton2.setSelected(true);
+                    }
+                }
+            }
+
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public DerivarSolicitud(int codSolicitud){
+        this.codSolicitud = codSolicitud;
+        initComponents();
+        this.setLocationRelativeTo(null);
+        jTextField1.setText(String.valueOf(codSolicitud));
+        this.dictionary = new HashMap<>();
+        llenarComboEmpleados();
+        llenarDatosIncidencia();
     }
 
     /**
@@ -37,16 +138,16 @@ public class DerivarSolicitud extends javax.swing.JFrame {
         jLabel25 = new javax.swing.JLabel();
         jLabel26 = new javax.swing.JLabel();
         jComboBox7 = new javax.swing.JComboBox<>();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setText("Derivar Solicitud");
+        jLabel1.setText("Derivar Solicitud Num");
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel3.setText("Empleado");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -71,20 +172,25 @@ public class DerivarSolicitud extends javax.swing.JFrame {
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel26.setText("Configuracion");
 
+        jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "preparacion", "validacion", "autorizacion", "en resultado" }));
         jComboBox7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox7ActionPerformed(evt);
             }
         });
 
+        jTextField1.setEditable(false);
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jTextField1.setText("00");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,22 +206,27 @@ public class DerivarSolicitud extends javax.swing.JFrame {
                                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(50, 50, 50)
-                                .addComponent(jButton1)))
-                        .addGap(20, 20, 20))
-                    .addComponent(jLabel1))
-                .addContainerGap(87, Short.MAX_VALUE))
+                                .addComponent(jButton1))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(59, 59, 59)
                     .addComponent(jLabel3)
-                    .addContainerGap(252, Short.MAX_VALUE)))
+                    .addContainerGap(271, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextField1)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -140,7 +251,24 @@ public class DerivarSolicitud extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String sql = "UPDATE SOLICITUD_EMPLEADO SET COD_EMPLEADO='"+dictionary.get(String.valueOf(jComboBox2.getSelectedItem())) +
+                "' WHERE COD_SOLICITUD='"+codSolicitud+"'";
+        Connection connection = new OracleConecction().conectar();
+
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+
+            connection.close();
+
+            actualizarDatosIncidencia();
+
+            JOptionPane.showMessageDialog(null,"Solicitud derivada correctamente");
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
@@ -196,5 +324,6 @@ public class DerivarSolicitud extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

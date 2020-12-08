@@ -27,6 +27,31 @@ public class Solicitud extends javax.swing.JFrame {
         this.Llenar_Empresas(BoxEmpresa);
 
     }
+
+    private String obtenerCodCliente(){
+        String sql = "SELECT * FROM CONTACTO WHERE NOMBRE='"+String.valueOf(BoxContacto.getSelectedItem())+"'";
+        Connection connection = new OracleConecction().conectar();
+
+        try {
+            Statement statement = connection.createStatement();
+
+            ResultSet result = statement.executeQuery(sql);
+
+            String output;
+
+            if(result.next()){
+                output =  result.getString("COD_CLIENTE");
+            }else{
+                output =  null;
+            }
+
+            connection.close();
+            return output;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
+    }
     
     public void Llenar_Empresas(JComboBox box){
         String dbUrl = "jdbc:oracle:thin:@152.67.62.154:1521/bdulima1_pdb1.subnetpub.vcninfra.oraclevcn.com";
@@ -609,20 +634,23 @@ public class Solicitud extends javax.swing.JFrame {
         String servicio = String.valueOf(jComboBox5.getSelectedItem());
         String canal = String.valueOf(jComboBox6.getSelectedItem());
 
+        String codCliente = obtenerCodCliente();
+
 
         Connection connection = new OracleConecction().conectar();
-        String sql = "{call INSERTARSOLICITUD(?, ?, null, null, null, null, ?, null, ?, ?, ?)}";
+        String sql = "{call INSERTARSOLICITUD(?,?, ?, null, null, null, null, ?, null, ?, ?, ?)}";
 
         try {
             CallableStatement callableStatement = connection.prepareCall(sql);
             System.out.println("Procedimiento preparado.");
 
-            callableStatement.setString(1,descripcion);
-            callableStatement.setString(2,status);
-            callableStatement.setString(3,fuente);
-            callableStatement.setString(4, nombreErrror);
-            callableStatement.setString(5,servicio);
-            callableStatement.setString(6, canal);
+            callableStatement.setString(1,codCliente);
+            callableStatement.setString(2,descripcion);
+            callableStatement.setString(3,status);
+            callableStatement.setString(4,fuente);
+            callableStatement.setString(5, nombreErrror);
+            callableStatement.setString(6,servicio);
+            callableStatement.setString(7, canal);
 
             System.out.println("Parametros establecidos.");
 
@@ -630,7 +658,7 @@ public class Solicitud extends javax.swing.JFrame {
 
             callableStatement.execute();
 
-            System.out.println("Procedimiento ejecutado correctamente");
+            JOptionPane.showMessageDialog(null,"Procedimiento ejecutado correctamente");
 
             connection.close();
         } catch (SQLException throwables) {
