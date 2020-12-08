@@ -36,15 +36,35 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                 //Llenar datos de la tabla solicitud
                 String desc = result.getString("DESCRIPCION");
                 String codProblema = result.getString("COD_PROBLEMA");
+                String codIncidencia = result.getString("COD_INCIDENCIA");
 
                 jTextField3.setText(desc);
 
                 jTextField6.setText(result.getString("STATUS"));
 
-                //TODO Llenar datos de empresa y contacto
+                //Llenar datos de empresa y contacto
+                String sqlSolContacto = "SELECT * FROM SOLICITUD_CONTACTO WHERE COD_SOLICITUD='"+codSolicitud+"'";
+                ResultSet resultSolCont = statement.executeQuery(sqlSolContacto);
+                if(resultSolCont.next()){
+                    String codContacto = resultSolCont.getString("COD_CLIENTE");
+
+                    //Llenar datos de contacto
+                    String sqlContacto = "SELECT * FROM CONTACTO WHERE COD_CLIENTE='"+codContacto+"'";
+                    ResultSet resultContacto = statement.executeQuery(sqlContacto);
+                    if(resultContacto.next()){
+                        jComboBox1.addItem(resultContacto.getString("NOMBRE"));
+                        String codEmpresa = resultContacto.getString("COD_EMPRESA");
+
+                        //Llenar datos de empresa
+                        String sqlEmpresa = "SELECT * FROM EMPRESA WHERE COD_EMPRESA='"+codEmpresa+"'";
+                        ResultSet resultEmpresa = statement.executeQuery(sqlEmpresa);
+                        if(resultEmpresa.next()){
+                            jComboBox4.addItem(resultEmpresa.getString("NOMBRE"));
+                        }
+                    }
+                }
 
                 //Llenar datos de la tabla incidencia
-                String codIncidencia = result.getString("COD_INCIDENCIA");
                 String sqlIncidencia = "SELECT * FROM INCIDENCIA WHERE COD_INCIDENCIA='"+codIncidencia+"'";
                 ResultSet resultInc = statement.executeQuery(sqlIncidencia);
                 if(resultInc.next()){
@@ -194,12 +214,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel1.setName(""); // NOI18N
         jPanel1.setOpaque(false);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Empresa");
-
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "School", "Scoot", "Bananero", "Barc" }));
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel19.setText("Contacto");
@@ -324,7 +340,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel9.setText("Descripción");
+        jLabel9.setText("Descripciï¿½n");
 
         jTextField3.setToolTipText("");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -352,7 +368,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel14.setText("Nombre de archivo");
 
         jLabel15.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel15.setText("Título del enlace");
+        jLabel15.setText("Tï¿½tulo del enlace");
 
         jLabel17.setForeground(new java.awt.Color(51, 153, 255));
         jLabel17.setText("No adjuntar");
@@ -366,7 +382,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         jLabel25.setText("Momento");
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel26.setText("Configuración");
+        jLabel26.setText("Configuraciï¿½n");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -393,7 +409,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Sí");
+        jRadioButton1.setText("Sï¿½");
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setText("No");
