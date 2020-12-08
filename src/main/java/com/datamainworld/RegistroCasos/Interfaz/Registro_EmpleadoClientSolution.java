@@ -9,6 +9,8 @@ import com.datamainworld.RegistroCasos.OracleConecction;
 import oracle.ucp.proxy.annotation.Pre;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -120,7 +122,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
                             .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txt_domicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -140,7 +142,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
                                 .addGap(11, 11, 11)
                                 .addComponent(jLabel1)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(107, 107, 107)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -195,36 +197,40 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_ingresoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) throws SQLException {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt){//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         String codArea = "24868";
         Connection connection = new OracleConecction().conectar();
         System.out.println("Connected to Oracle database server");
         String sql = "INSERT INTO EMPLEADO VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)";
         String idCall = "select id_empleado.nextval from dual";
-        Statement statement2 = connection.createStatement();
-        ResultSet result = statement2.executeQuery(idCall);
-        String id="";
-        while(result.next()) {
-            id = result.getString(1);
+        try{
+            Statement statement2 = connection.createStatement();
+            ResultSet result = statement2.executeQuery(idCall);
+            String id="";
+            while(result.next()) {
+                id = result.getString(1);
+            }
+            statement2.close();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, id);
+            statement.setString(2, txt_dni.getText());
+            statement.setString(3, txt_email.getText());
+            statement.setString(4, txt_telf.getText());
+            statement.setString(5, txt_name.getText());
+            statement.setString(6, txt_ingreso.getText());
+            statement.setString(7, txt_nac.getText());
+            statement.setString(8, txt_domicilio.getText());
+            statement.setString(9, codArea);
+            int rows = statement.executeUpdate();
+            if(rows > 0 ){
+                System.out.println("A row has been inserted.");
+            }
+            statement.close();
+            connection.close();
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        statement2.close();
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, id);
-        statement.setString(2, txt_dni.getText());
-        statement.setString(3, txt_email.getText());
-        statement.setString(4, txt_telf.getText());
-        statement.setString(5, txt_name.getText());
-        statement.setString(6, txt_ingreso.getText());
-        statement.setString(7, txt_nac.getText());
-        statement.setString(8, txt_domicilio.getText());
-        statement.setString(9, codArea);
-        int rows = statement.executeUpdate();
-        if(rows > 0 ){
-            System.out.println("A row has been inserted.");
-        }
-        statement.close();
-        connection.close();
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

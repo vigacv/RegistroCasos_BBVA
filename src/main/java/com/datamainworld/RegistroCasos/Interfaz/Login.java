@@ -143,12 +143,16 @@ public class Login extends javax.swing.JFrame {
                             this.setVisible(false);
                         }
 
-                        else
-                        {
+                        else if(result2.getString("COD_ÁREA").equalsIgnoreCase("2")){
                             Empleado_Engineering objEng = new Empleado_Engineering(cod_emp);
                             objEng.setVisible(true);
                             this.setVisible(false);
                         }
+                        else{
+                            Administrador temp = new Administrador(cod_emp);
+                            temp.setVisible(true);
+                            this.setVisible(false);
+                                }
 
                     }
 
