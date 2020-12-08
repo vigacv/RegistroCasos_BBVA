@@ -93,11 +93,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
         jButton1.setText("Agregar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    jButton1ActionPerformed(evt);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                jButton1ActionPerformed(evt);
             }
         });
 
