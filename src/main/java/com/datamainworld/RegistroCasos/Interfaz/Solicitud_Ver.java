@@ -36,14 +36,34 @@ public class Solicitud_Ver extends javax.swing.JFrame {
             if(result.next()){
                 //Llenar datos de la tabla solicitud
                 String desc = result.getString("DESCRIPCION");
+                String codProblema = result.getString("COD_PROBLEMA");
                 jTextField3.setText(desc);
 
                 jTextField6.setText(result.getString("STATUS"));
 
-                //TODO Llenar datos de empresa y contacto
+                //Llenar datos de empresa y contacto
+                String sqlSolContacto = "SELECT * FROM SOLICITUD_CONTACTO WHERE COD_SOLICITUD='"+codSolicitud+"'";
+                ResultSet resultSolCont = statement.executeQuery(sqlSolContacto);
+                if(resultSolCont.next()){
+                    String codContacto = resultSolCont.getString("COD_CLIENTE");
+
+                    //Llenar datos de contacto
+                    String sqlContacto = "SELECT * FROM CONTACTO WHERE COD_CLIENTE='"+codContacto+"'";
+                    ResultSet resultContacto = statement.executeQuery(sqlContacto);
+                    if(resultContacto.next()){
+                        jComboBox1.addItem(resultContacto.getString("NOMBRE"));
+                        String codEmpresa = resultContacto.getString("COD_EMPRESA");
+
+                        //Llenar datos de empresa
+                        String sqlEmpresa = "SELECT * FROM EMPRESA WHERE COD_EMPRESA='"+codEmpresa+"'";
+                        ResultSet resultEmpresa = statement.executeQuery(sqlEmpresa);
+                        if(resultEmpresa.next()){
+                            jComboBox4.addItem(resultEmpresa.getString("NOMBRE"));
+                        }
+                    }
+                }
 
                 //Llenar datos de la tabla problema
-                String codProblema = result.getString("COD_PROBLEMA");
                 String sqlProblema = "SELECT * FROM PROBLEMA WHERE COD_PROBLEMA='"+codProblema+"'";
 
                 ResultSet result2 = statement.executeQuery(sqlProblema);
@@ -63,8 +83,16 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                     }
                 }
 
+                String sqlSolEmp = "SELECT * FROM SOLICITUD_EMPLEADO WHERE COD_SOLICITUD='"+codSolicitud+"'";
+                ResultSet resultSolEmp = statement.executeQuery(sqlSolEmp);
+                if(resultSolEmp.next()){
+                    jTextField7.setText(resultSolEmp.getString("FECHA_INICIO"));
+                    jTextField11.setText(resultSolEmp.getString("FECHA_CIERRE"));
+                }
+
                 connection.close();
             }
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -132,7 +160,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setText("Solicitud Nï¿½ ");
+        jLabel1.setText("Solicitud Num ");
 
         jTextField5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jTextField5.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -151,12 +179,8 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         jPanel1.setName(""); // NOI18N
         jPanel1.setOpaque(false);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Empresa");
-
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "School", "Scoot", "Bananero", "Barc" }));
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel19.setText("Contacto");
@@ -393,7 +417,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         );
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel8.setText("Descripciï¿½n del caso:");
+        jLabel8.setText("Descripción del caso:");
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");

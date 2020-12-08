@@ -60,11 +60,11 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
 
         jLabel3.setText("DNI:");
 
-        jLabel4.setText("Correo electrónico:");
+        jLabel4.setText("Correo electrï¿½nico:");
 
         jLabel5.setText("Fecha de nacimiento:");
 
-        jLabel6.setText("Dirección del domicilio:");
+        jLabel6.setText("Direcciï¿½n del domicilio:");
 
         txt_name.setMinimumSize(new java.awt.Dimension(80, 50));
 
@@ -93,11 +93,15 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
         jButton1.setText("Agregar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                try {
+                    jButton1ActionPerformed(evt);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
             }
         });
 
-        jLabel8.setText("Teléfono:");
+        jLabel8.setText("Telï¿½fono:");
 
         txt_telf.setMinimumSize(new java.awt.Dimension(80, 50));
         txt_telf.addActionListener(new java.awt.event.ActionListener() {
