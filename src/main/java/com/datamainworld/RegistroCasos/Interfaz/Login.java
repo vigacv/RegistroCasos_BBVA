@@ -136,14 +136,14 @@ public class Login extends javax.swing.JFrame {
 
                     ResultSet result2 = statement.executeQuery(sqlEmp);
                     if(result2.next()){
-                        if (result2.getString("COD_ÁREA").equalsIgnoreCase("1"))
+                        if (result2.getString("COD_AREA").equalsIgnoreCase("1"))
                         {
                             Empleado_ClientSolution objCS = new Empleado_ClientSolution(cod_emp);
                             objCS.setVisible(true);
                             this.setVisible(false);
                         }
 
-                        else if(result2.getString("COD_ÁREA").equalsIgnoreCase("2")){
+                        else if(result2.getString("COD_AREA").equalsIgnoreCase("2")){
                             Empleado_Engineering objEng = new Empleado_Engineering(cod_emp);
                             objEng.setVisible(true);
                             this.setVisible(false);

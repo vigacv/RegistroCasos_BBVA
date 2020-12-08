@@ -172,7 +172,6 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
         String solicitudSelec = jList1.getSelectedValue();
         char indiceSolSelec = solicitudSelec.charAt(solicitudSelec.length()-1);
         Solicitud_Ver objSV = new Solicitud_Ver(Character.getNumericValue(indiceSolSelec));
@@ -182,7 +181,9 @@ public class Empleado_ClientSolution extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        DerivarSolicitud objDS = new DerivarSolicitud();
+        String solicitudSelec = jList1.getSelectedValue();
+        char indiceSolSelec = solicitudSelec.charAt(solicitudSelec.length()-1);
+        DerivarSolicitud objDS = new DerivarSolicitud(Character.getNumericValue(indiceSolSelec));
         objDS.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
