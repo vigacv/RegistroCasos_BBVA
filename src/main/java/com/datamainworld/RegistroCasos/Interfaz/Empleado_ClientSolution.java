@@ -6,7 +6,6 @@
 package com.datamainworld.RegistroCasos.Interfaz;
 
 import com.datamainworld.RegistroCasos.OracleConecction;
-import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.swing.*;
 import java.sql.Connection;

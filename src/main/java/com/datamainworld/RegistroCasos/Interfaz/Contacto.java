@@ -28,16 +28,16 @@ public class Contacto extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    public Contacto(String codContacto) {
+    public Contacto(String nombreEmpresa) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.ObtenerDatos(codContacto);
+        this.ObtenerDatos(nombreEmpresa);
     }
 
-    public void ObtenerDatos(String cod){
+    public void ObtenerDatos(String name){
         Connection connection = new OracleConecction().conectar();
         //Consulta
-        String contactoSeleccionado = "(SELECT * FROM Contacto WHERE contacto.cod_cliente='"+cod+"')";
+        String contactoSeleccionado = "(SELECT * FROM Contacto WHERE contacto.nombre='"+name+"')";
         try {
             //Conexion
             Statement statement = connection.prepareStatement(contactoSeleccionado);
@@ -271,6 +271,7 @@ public class Contacto extends javax.swing.JFrame {
     private void But_OKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_OKActionPerformed
         // TODO add your handling code here:
         //Se debe cerrar la ventana o en su defecto regresar a la ventana anterior. es más sencillo cerrar la ventana
+        this.setVisible(false);
     }//GEN-LAST:event_But_OKActionPerformed
 
     private void txtTTokenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTTokenActionPerformed

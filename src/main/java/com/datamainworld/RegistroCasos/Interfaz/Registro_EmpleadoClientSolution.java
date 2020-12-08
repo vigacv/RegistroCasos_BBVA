@@ -60,11 +60,11 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
 
         jLabel3.setText("DNI:");
 
-        jLabel4.setText("Correo electrï¿½nico:");
+        jLabel4.setText("Correo electrónico:");
 
         jLabel5.setText("Fecha de nacimiento:");
 
-        jLabel6.setText("Direcciï¿½n del domicilio:");
+        jLabel6.setText("Dirección del domicilio:");
 
         txt_name.setMinimumSize(new java.awt.Dimension(80, 50));
 
@@ -101,7 +101,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setText("Telï¿½fono:");
+        jLabel8.setText("Teléfono:");
 
         txt_telf.setMinimumSize(new java.awt.Dimension(80, 50));
         txt_telf.addActionListener(new java.awt.event.ActionListener() {
