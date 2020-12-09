@@ -10,10 +10,7 @@ import com.datamainworld.RegistroCasos.OracleConecction;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ComponentListener;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  *
@@ -119,6 +116,9 @@ public class Administrador extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
+        But_Filtro_Estado = new javax.swing.JButton();
+        But_Filtro_Fechas = new javax.swing.JButton();
+        But_SinFiltro = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -196,6 +196,27 @@ public class Administrador extends javax.swing.JFrame {
 
         jLabel3.setText("Empleados Engineering");
 
+        But_Filtro_Estado.setText("Filtrar por Estado");
+        But_Filtro_Estado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                But_Filtro_EstadoActionPerformed(evt);
+            }
+        });
+
+        But_Filtro_Fechas.setText("Filtro entre Fechas");
+        But_Filtro_Fechas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                But_Filtro_FechasActionPerformed(evt);
+            }
+        });
+
+        But_SinFiltro.setText("Quitar Filtro");
+        But_SinFiltro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                But_SinFiltroActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -207,8 +228,14 @@ public class Administrador extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(But_VerSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(But_VerSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(But_Filtro_Estado, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(But_Filtro_Fechas, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(But_SinFiltro, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(330, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -259,8 +286,12 @@ public class Administrador extends javax.swing.JFrame {
                                 .addComponent(But_Ver_EmpleadoCS)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(But_Add_EmpleadoCS)))))
-                .addGap(9, 9, 9)
-                .addComponent(But_VerSolicitud)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(But_Filtro_Estado)
+                    .addComponent(But_VerSolicitud)
+                    .addComponent(But_Filtro_Fechas)
+                    .addComponent(But_SinFiltro))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -322,6 +353,98 @@ public class Administrador extends javax.swing.JFrame {
 
     }//GEN-LAST:event_But_VerSolicitudActionPerformed
 
+    private void But_Filtro_EstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Filtro_EstadoActionPerformed
+        // TODO add your handling code here:
+        Object[] estados = {"Cerrado","Pendiente","Gestion de Incidencia","Reabierto"};
+        Object status = JOptionPane.showInputDialog(null,"Selecciona un estado","Elegir",JOptionPane.QUESTION_MESSAGE, null,estados,estados[0]);
+        Connection connection = new OracleConecction().conectar();
+        String sql = "SELECT s.cod_solicitud, s.status, p.fuente, e.canal, s.descripcion, s.cod_incidencia," +
+                " se.fecha_inicio, se.fecha_cierre FROM Solicitud s, Problema p, Error e, Solicitud_Empleado se " +
+                "WHERE se.cod_solicitud=s.cod_solicitud AND s.cod_problema=p.cod_problema AND p.cod_error=e.cod_error " +
+                "AND s.status='"+status+"' ORDER BY s.cod_solicitud";
+        eliminarFilas();
+        DefaultTableModel model = (DefaultTableModel) Table_Solicitud.getModel();
+        //model.addRow(new Object[]{"1","2","3","4","5","6","7","8"});
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while (result.next()){
+                String e1 = result.getString(1); //cod
+                String e2 = result.getString(2); //status
+                String e3 = result.getString(3); //fuente
+                String e4 = result.getString(4); //canal
+                String e5 = result.getString(5); //descripcion
+                String e6 = result.getString(6); //incidencia
+                if (e6==null){
+                    e6="NO";
+                }else{
+                    e6="SI";
+                }
+                String e7 = String.valueOf(result.getDate(7)); //fecha_inicio
+                String e8 = String.valueOf(result.getDate(8)); //fecha_cierre
+                if (e8.equalsIgnoreCase("null")){
+                    e8=" -- / -- / -- ";
+                }
+                model.addRow(new Object[]{e1,e2,e3,e4,e5,e6,e7,e8});
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }//GEN-LAST:event_But_Filtro_EstadoActionPerformed
+
+    private void But_Filtro_FechasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Filtro_FechasActionPerformed
+        // TODO add your handling code here:
+        JTextField fecha1 = new JTextField();
+        JTextField fecha2 = new JTextField();
+        Object[] message = {"Fecha1: ",fecha1, "Fecha2: ",fecha2};
+        int option = JOptionPane.showConfirmDialog(null, message, "Login", JOptionPane.OK_CANCEL_OPTION);
+        if (option!=JOptionPane.OK_OPTION){
+            System.out.println("Cancelado");
+        }
+        Connection connection = new OracleConecction().conectar();
+        String sql = "SELECT s.cod_solicitud, s.status, p.fuente, e.canal, s.descripcion, s.cod_incidencia," +
+                " se.fecha_inicio, se.fecha_cierre FROM Solicitud s, Problema p, Error e, Solicitud_Empleado se " +
+                "WHERE se.cod_solicitud=s.cod_solicitud AND s.cod_problema=p.cod_problema AND p.cod_error=e.cod_error AND" +
+                " se.fecha_inicio between to_date('"+ fecha1.getText()+"','yy/mm/dd') and to_date('"+fecha2.getText()+"','yy/mm/dd') ORDER BY s.cod_solicitud";
+        eliminarFilas();
+        System.out.println(sql);
+        System.out.println(fecha1.getText());
+        System.out.println(fecha2.getText());
+        DefaultTableModel model = (DefaultTableModel) Table_Solicitud.getModel();
+        //model.addRow(new Object[]{"1","2","3","4","5","6","7","8"});
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while (result.next()){
+                String e1 = result.getString(1); //cod
+                String e2 = result.getString(2); //status
+                String e3 = result.getString(3); //fuente
+                String e4 = result.getString(4); //canal
+                String e5 = result.getString(5); //descripcion
+                String e6 = result.getString(6); //incidencia
+                if (e6==null){
+                    e6="NO";
+                }else{
+                    e6="SI";
+                }
+                String e7 = String.valueOf(result.getDate(7)); //fecha_inicio
+                String e8 = String.valueOf(result.getDate(8)); //fecha_cierre
+                if (e8.equalsIgnoreCase("null")){
+                    e8=" -- / -- / -- ";
+                }
+                model.addRow(new Object[]{e1,e2,e3,e4,e5,e6,e7,e8});
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }//GEN-LAST:event_But_Filtro_FechasActionPerformed
+
+    private void But_SinFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_SinFiltroActionPerformed
+        // TODO add your handling code here:
+        llenarSolicitudes();
+    }//GEN-LAST:event_But_SinFiltroActionPerformed
+
 
 
 
@@ -364,6 +487,9 @@ public class Administrador extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton But_Add_EmpleadoCS;
     private javax.swing.JButton But_Add_EmpleadoE;
+    private javax.swing.JButton But_Filtro_Estado;
+    private javax.swing.JButton But_Filtro_Fechas;
+    private javax.swing.JButton But_SinFiltro;
     private javax.swing.JButton But_VerSolicitud;
     private javax.swing.JButton But_Ver_EmpleadoCS;
     private javax.swing.JButton But_Ver_EmpleadoE;

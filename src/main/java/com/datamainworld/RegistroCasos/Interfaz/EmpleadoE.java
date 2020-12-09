@@ -264,6 +264,7 @@ public class EmpleadoE extends javax.swing.JFrame {
             System.out.println("Connected to Oracle database server");
             String sql = "INSERT INTO EMPLEADO VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)";
             String idCall = "select id_empleado.nextval from dual";
+            String sqlUser = "INSERT INTO Usuario VALUEs(?, ?, ?, ?)";
             try{
                 Statement statement2 = connection.createStatement();
                 ResultSet result = statement2.executeQuery(idCall);
@@ -286,6 +287,22 @@ public class EmpleadoE extends javax.swing.JFrame {
                 if(rows > 0 ){
                     System.out.println("A row has been inserted.");
                 }
+                //Crear un usuario
+                PreparedStatement statement3 = connection.prepareStatement(sqlUser);
+                char[] charName = txt_name.getText().toCharArray();
+                String user = String.valueOf(charName[0])+String.valueOf(charName[1])+String.valueOf(charName[7])+String.valueOf(charName[8])+String.valueOf(charName[9]);
+                user = user.toUpperCase();
+                String pw = "123";
+                statement3.setString(1,id);
+                statement3.setString(2,user);
+                statement3.setString(3,pw);
+                statement3.setString(4,id);
+                int rows2 = statement3.executeUpdate();
+                if(rows2 > 0 ){
+                    System.out.println("A row has been inserted.");
+                }
+                statement3.close();
+
                 statement.close();
                 connection.close();
             }catch (SQLException throwables) {
