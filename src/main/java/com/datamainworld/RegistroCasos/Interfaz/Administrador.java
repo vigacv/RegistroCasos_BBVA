@@ -108,7 +108,7 @@ public class Administrador extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         But_Add_EmpleadoCS = new javax.swing.JButton();
         But_Ver_EmpleadoCS = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        But_VerSolicitud = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
@@ -139,7 +139,12 @@ public class Administrador extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Ver solicitud");
+        But_VerSolicitud.setText("Ver solicitud");
+        But_VerSolicitud.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                But_VerSolicitudActionPerformed(evt);
+            }
+        });
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -202,7 +207,7 @@ public class Administrador extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(But_VerSolicitud, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -255,7 +260,7 @@ public class Administrador extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(But_Add_EmpleadoCS)))))
                 .addGap(9, 9, 9)
-                .addComponent(jButton4)
+                .addComponent(But_VerSolicitud)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -302,6 +307,21 @@ public class Administrador extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_But_Ver_EmpleadoEActionPerformed
 
+    private void But_VerSolicitudActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_VerSolicitudActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) Table_Solicitud.getModel();
+        String id = String.valueOf(model.getValueAt(Table_Solicitud.getSelectedRow(),0));
+        String incidencia = String.valueOf(model.getValueAt(Table_Solicitud.getSelectedRow(),5));
+        if (incidencia=="SI"){
+            Solicitud_Inicidencia_Ver objSV = new Solicitud_Inicidencia_Ver(Integer.parseInt(id));
+            objSV.setVisible(true);
+        }else{
+            Solicitud_Ver objSV = new Solicitud_Ver(Integer.parseInt(id));
+            objSV.setVisible(true);
+        }
+
+    }//GEN-LAST:event_But_VerSolicitudActionPerformed
+
 
 
 
@@ -344,10 +364,10 @@ public class Administrador extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton But_Add_EmpleadoCS;
     private javax.swing.JButton But_Add_EmpleadoE;
+    private javax.swing.JButton But_VerSolicitud;
     private javax.swing.JButton But_Ver_EmpleadoCS;
     private javax.swing.JButton But_Ver_EmpleadoE;
     private javax.swing.JTable Table_Solicitud;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
