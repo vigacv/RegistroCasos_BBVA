@@ -7,10 +7,8 @@ package com.datamainworld.RegistroCasos.Interfaz;
 
 import com.datamainworld.RegistroCasos.OracleConecction;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import javax.swing.*;
+import java.sql.*;
 
 /**
  *
@@ -18,9 +16,15 @@ import java.sql.Statement;
  */
 public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
+    private int codSolicitud;
     /**
      * Creates new form Solicitud
      */
+
+    private String codProblema;
+    private String codIncidencia;
+    private String codError;
+
     private void llenarInfoSolicitudIncidencia(int codSolicitud){
         jTextField5.setText(String.valueOf(codSolicitud));
 
@@ -35,8 +39,8 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             if(result.next()){
                 //Llenar datos de la tabla solicitud
                 String desc = result.getString("DESCRIPCION");
-                String codProblema = result.getString("COD_PROBLEMA");
-                String codIncidencia = result.getString("COD_INCIDENCIA");
+                codProblema = result.getString("COD_PROBLEMA");
+                codIncidencia = result.getString("COD_INCIDENCIA");
 
                 jTextField3.setText(desc);
 
@@ -95,7 +99,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                     jTextField8.setText(result2.getString("HORA"));
 
                     //Llenar datos de la tabla error
-                    String codError = result2.getString("COD_PROBLEMA");
+                    codError = result2.getString("COD_PROBLEMA");
                     String sqlError = "SELECT * FROM ERROR WHERE COD_ERROR='"+codError+"'";
                     ResultSet result3 = statement.executeQuery(sqlError);
                     if (result3.next()){
@@ -192,6 +196,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
     public Solicitud_Inicidencia_Ver(int codSolicitud){
         initComponents();
+        this.codSolicitud = codSolicitud;
         this.setLocationRelativeTo(null);
         llenarInfoSolicitudIncidencia(codSolicitud);
         llenarCombos();
@@ -328,7 +333,7 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
-                        .addComponent(jComboBox1, 0, 237, Short.MAX_VALUE)))
+                        .addComponent(jComboBox1, 0, 247, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton3)
@@ -536,15 +541,13 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField3)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel27)
-                            .addComponent(jLabel9))
+                        .addComponent(jLabel27)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel28)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jTextField13))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
@@ -572,8 +575,9 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                                 .addGap(30, 30, 30)
                                 .addComponent(jLabel12)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1)))
-                        .addGap(0, 52, Short.MAX_VALUE)))
+                                .addComponent(jButton1))
+                            .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -581,14 +585,17 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel28))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel27)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                        .addComponent(jLabel9)))
+                        .addComponent(jLabel9))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jTextField12, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel28))
+                            .addComponent(jTextField13, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -730,6 +737,11 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jButton2.setText("Modificar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel4.setText("Status");
@@ -754,12 +766,12 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel8)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 3, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(29, 29, 29)
@@ -909,6 +921,60 @@ public class Solicitud_Inicidencia_Ver extends javax.swing.JFrame {
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Connection connection = new OracleConecction().conectar();
+        String sqlUpdateSolicitud = "{call actualizarSolicitudEmpleado(?,?)}";
+        try {
+            CallableStatement callableStatement = connection.prepareCall(sqlUpdateSolicitud);
+            callableStatement.setString(1, String.valueOf(codSolicitud));
+            callableStatement.setString(2,String.valueOf(jComboBox3.getSelectedItem()));
+            callableStatement.execute();
+            System.out.println("Status y fecha cierre actualizados");
+
+            String sqlUpdateEmpresa = "{call actualizarContactoConSol(?,?)}";
+            callableStatement = connection.prepareCall(sqlUpdateEmpresa);
+            callableStatement.setString(1,String.valueOf(codSolicitud));
+            callableStatement.setString(2,String.valueOf(jComboBox1.getSelectedItem()));
+            System.out.println("Empresa y contacto actualizados correctamente");
+
+            String sqlUpdateProblema = "{ call actualizarProblema(?,?,?,?)}";
+            callableStatement = connection.prepareCall(sqlUpdateProblema);
+            callableStatement.setString(1,codProblema);
+            callableStatement.setString(2,String.valueOf(jComboBox2.getSelectedItem()));
+            callableStatement.setTimestamp(3, Timestamp.valueOf(jTextField7.getText()));
+            callableStatement.setTimestamp(4, Timestamp.valueOf(jTextField8.getText()));
+            callableStatement.execute();
+            System.out.println("Problema actualizado correctamente");
+
+            String sqlActualizarError = "{call actualizarError(?,?,?,?)}";
+            callableStatement = connection.prepareCall(sqlActualizarError);
+            callableStatement.setString(1,codError);
+            callableStatement.setString(2,String.valueOf(jComboBox8.getSelectedItem()));
+            callableStatement.setString(3,String.valueOf(jComboBox5.getSelectedItem()));
+            callableStatement.setString(4,String.valueOf(jComboBox6.getSelectedItem()));
+            callableStatement.execute();
+
+            System.out.println("Error actualizado correctanemte.");
+
+            String sqlActualizarIncidencia = "{call actualizarIncidencia(?,?,?)}";
+            callableStatement = connection.prepareCall(sqlActualizarIncidencia);
+            callableStatement.setString(1, codIncidencia);
+            callableStatement.setString(2,String.valueOf(jComboBox7.getSelectedItem()));
+            String config="";
+            if(jRadioButton1.isSelected()){
+                config="SI";
+            }else config="NO";
+            callableStatement.setString(3,config);
+            callableStatement.execute();
+
+            connection.close();
+
+            JOptionPane.showMessageDialog(null,"Solicitud actualizada correctamente");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
