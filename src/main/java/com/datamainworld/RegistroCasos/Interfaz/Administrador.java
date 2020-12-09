@@ -8,6 +8,8 @@ package com.datamainworld.RegistroCasos.Interfaz;
 import com.datamainworld.RegistroCasos.OracleConecction;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.event.ComponentListener;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +28,7 @@ public class Administrador extends javax.swing.JFrame {
         DefaultListModel model = new DefaultListModel<>();
         Connection connection = new OracleConecction().conectar();
 
-        String sql = "SELECT * FROM Empleado WHERE cod_area="+codArea;
+        String sql = "SELECT * FROM Empleado WHERE cod_area="+codArea+" ORDER BY cod_empleado";
         try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
@@ -42,11 +44,55 @@ public class Administrador extends javax.swing.JFrame {
         return model;
     }
 
+    public void eliminarFilas(){
+        DefaultTableModel model = (DefaultTableModel) Table_Solicitud.getModel();
+        int filas = model.getRowCount();
+        for (int i=1;i<=filas;i++){
+            model.removeRow(0);
+        }
+    }
+
+    public void llenarSolicitudes(){
+        Connection connection = new OracleConecction().conectar();
+        String sql = "SELECT s.cod_solicitud, s.status, p.fuente, e.canal, s.descripcion, s.cod_incidencia," +
+                " se.fecha_inicio, se.fecha_cierre FROM Solicitud s, Problema p, Error e, Solicitud_Empleado se " +
+                "WHERE se.cod_solicitud=s.cod_solicitud AND s.cod_problema=p.cod_problema AND p.cod_error=e.cod_error ORDER BY s.cod_solicitud";
+        eliminarFilas();
+        DefaultTableModel model = (DefaultTableModel) Table_Solicitud.getModel();
+        //model.addRow(new Object[]{"1","2","3","4","5","6","7","8"});
+        try{
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            while (result.next()){
+                String e1 = result.getString(1); //cod
+                String e2 = result.getString(2); //status
+                String e3 = result.getString(3); //fuente
+                String e4 = result.getString(4); //canal
+                String e5 = result.getString(5); //descripcion
+                String e6 = result.getString(6); //incidencia
+                if (e6==null){
+                    e6="NO";
+                }else{
+                    e6="SI";
+                }
+                String e7 = String.valueOf(result.getDate(7)); //fecha_inicio
+                String e8 = String.valueOf(result.getDate(8)); //fecha_cierre
+                if (e8.equalsIgnoreCase("null")){
+                    e8=" -- / -- / -- ";
+                }
+                model.addRow(new Object[]{e1,e2,e3,e4,e5,e6,e7,e8});
+            }
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     public Administrador() {
         initComponents();
         this.setLocationRelativeTo(null);
         jList1.setModel(modelList(1));
         jList2.setModel(modelList(2));
+        llenarSolicitudes();
     }
 
 
@@ -60,16 +106,16 @@ public class Administrador extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        But_Add_EmpleadoCS = new javax.swing.JButton();
+        But_Ver_EmpleadoCS = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        Table_Solicitud = new javax.swing.JTable();
+        But_Add_EmpleadoE = new javax.swing.JButton();
+        But_Ver_EmpleadoE = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jList2 = new javax.swing.JList<>();
         jLabel3 = new javax.swing.JLabel();
@@ -79,17 +125,17 @@ public class Administrador extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Administrador");
 
-        jButton1.setText("Agregar empleado CS");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        But_Add_EmpleadoCS.setText("Agregar empleado CS");
+        But_Add_EmpleadoCS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                But_Add_EmpleadoCSActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Ver datos del empleado");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        But_Ver_EmpleadoCS.setText("Ver datos del empleado");
+        But_Ver_EmpleadoCS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                But_Ver_EmpleadoCSActionPerformed(evt);
             }
         });
 
@@ -104,30 +150,35 @@ public class Administrador extends javax.swing.JFrame {
 
         jLabel2.setText("Empleados Client Solution");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Table_Solicitud.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Codigo", "Estado", "Fuente", "Canal", "Descripcion", "Incidencia", "Fecha Inicio", "Fecha Cierre"
             }
-        ));
-        jScrollPane2.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
 
-        jButton3.setText("Agregar empleado E");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(Table_Solicitud);
+
+        But_Add_EmpleadoE.setText("Agregar empleado E");
+        But_Add_EmpleadoE.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                But_Add_EmpleadoEActionPerformed(evt);
             }
         });
 
-        jButton5.setText("Ver datos del empleado");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        But_Ver_EmpleadoE.setText("Ver datos del empleado");
+        But_Ver_EmpleadoE.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                But_Ver_EmpleadoEActionPerformed(evt);
             }
         });
 
@@ -147,37 +198,36 @@ public class Administrador extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton2)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(37, 37, 37)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jButton5))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(252, 252, 252)
+                        .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(But_Ver_EmpleadoCS)
+                            .addComponent(But_Add_EmpleadoCS, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(252, 252, 252)
-                                .addComponent(jLabel1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(But_Add_EmpleadoE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(But_Ver_EmpleadoE)))
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(71, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,25 +237,23 @@ public class Administrador extends javax.swing.JFrame {
                 .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jButton1))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addComponent(jButton5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton3))))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(But_Ver_EmpleadoE, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(But_Add_EmpleadoE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(But_Ver_EmpleadoCS)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(But_Add_EmpleadoCS)))))
                 .addGap(9, 9, 9)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -216,29 +264,43 @@ public class Administrador extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void But_Add_EmpleadoCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Add_EmpleadoCSActionPerformed
         // TODO add your handling code here:
-        Solicitud objSol = new Solicitud();
+        this.setVisible(false);
+        EmpleadoCS objSol = new EmpleadoCS();
         objSol.setVisible(true);
+    }//GEN-LAST:event_But_Add_EmpleadoCSActionPerformed
+
+    private void But_Ver_EmpleadoCSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Ver_EmpleadoCSActionPerformed
+        // TODO add your handling code here:
+        String empleadoSeleccionado = jList1.getSelectedValue();
+        if (empleadoSeleccionado==null){
+            JOptionPane.showMessageDialog(null,"No ha seleccionado un empleado");
+        }else {
+            EmpleadoCS objSV = new EmpleadoCS(empleadoSeleccionado);
+            this.setVisible(false);
+            objSV.setVisible(true);
+        }
+    }//GEN-LAST:event_But_Ver_EmpleadoCSActionPerformed
+
+    private void But_Add_EmpleadoEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Add_EmpleadoEActionPerformed
+        // TODO add your handling code here:
         this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
+        EmpleadoE objSol = new EmpleadoE();
+        objSol.setVisible(true);
+    }//GEN-LAST:event_But_Add_EmpleadoEActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void But_Ver_EmpleadoEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_But_Ver_EmpleadoEActionPerformed
         // TODO add your handling code here:
-        String solicitudSelec = jList1.getSelectedValue();
-        char indiceSolSelec = solicitudSelec.charAt(solicitudSelec.length()-1);
-        Solicitud_Ver objSV = new Solicitud_Ver(Character.getNumericValue(indiceSolSelec));
-        objSV.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+        String empleadoSeleccionado = jList2.getSelectedValue();
+        if (empleadoSeleccionado==null){
+            JOptionPane.showMessageDialog(null,"No ha seleccionado un empleado");
+        }else {
+            EmpleadoE objSV = new EmpleadoE(empleadoSeleccionado);
+            this.setVisible(false);
+            objSV.setVisible(true);
+        }
+    }//GEN-LAST:event_But_Ver_EmpleadoEActionPerformed
 
 
 
@@ -280,11 +342,12 @@ public class Administrador extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton But_Add_EmpleadoCS;
+    private javax.swing.JButton But_Add_EmpleadoE;
+    private javax.swing.JButton But_Ver_EmpleadoCS;
+    private javax.swing.JButton But_Ver_EmpleadoE;
+    private javax.swing.JTable Table_Solicitud;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -293,6 +356,5 @@ public class Administrador extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

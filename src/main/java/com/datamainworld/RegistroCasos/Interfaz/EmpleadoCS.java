@@ -8,6 +8,8 @@ package com.datamainworld.RegistroCasos.Interfaz;
 import com.datamainworld.RegistroCasos.OracleConecction;
 import oracle.ucp.proxy.annotation.Pre;
 
+import javax.management.StringValueExp;
+import javax.swing.*;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,14 +18,48 @@ import java.util.logging.Logger;
  *
  * @author PC
  */
-public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
+public class EmpleadoCS extends javax.swing.JFrame {
 
     /**
      * Creates new form PersonalDeClientSolution
      */
-    public Registro_EmpleadoClientSolution() {
+    private Boolean edit = false;
+    private int idEmpleado=-1;
+
+    public EmpleadoCS() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+    public EmpleadoCS(String nameEmpleado) {
+        initComponents();
+        this.setLocationRelativeTo(null);
+        LlenarCampos(nameEmpleado);
+        edit = true;
+    }
+
+    public void LlenarCampos(String nameEmpleado){
+        Connection connection = new OracleConecction().conectar();
+        System.out.println("Connected to Oracle database server");
+        String query = "SELECT * FROM Empleado WHERE nombre='"+nameEmpleado+"'";
+        try{
+            //Preparando
+            Statement statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery(query);
+            //Obteniendo
+            while (result.next()) {
+                idEmpleado = Integer.parseInt(result.getString("cod_empleado"));
+                txt_name.setText(result.getString("nombre"));
+                txt_dni.setText(result.getString("dni"));
+                txt_telf.setText(result.getString("telf"));
+                txt_email.setText(result.getString("correo"));
+                txt_nac.setText(String.valueOf(result.getDate("fecha_nacimiento")));
+                txt_domicilio.setText(result.getString("dirección"));
+                txt_ingreso.setText(String.valueOf(result.getDate("fecha_ingreso_empresa")));
+            }
+            connection.close();
+        }catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     /**
@@ -53,7 +89,6 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
         txt_telf = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(408, 711));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel1.setText("Personal Client Solution");
@@ -92,7 +127,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Agregar");
+        jButton1.setText("OK");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -115,38 +150,39 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(11, 11, 11)
+                                .addComponent(jLabel1)))
+                        .addGap(0, 130, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txt_domicilio, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txt_ingreso, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txt_nac, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txt_telf, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_dni, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
+                            .addComponent(txt_domicilio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_email, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addComponent(jLabel1)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(57, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(107, 107, 107)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(txt_dni, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_telf, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txt_nac, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txt_ingreso, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(txt_name, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(10, 10, 10))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,9 +217,9 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txt_ingreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -199,38 +235,71 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt){//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        String codArea = "24868";
-        Connection connection = new OracleConecction().conectar();
-        System.out.println("Connected to Oracle database server");
-        String sql = "INSERT INTO EMPLEADO VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)";
-        String idCall = "select id_empleado.nextval from dual";
-        try{
-            Statement statement2 = connection.createStatement();
-            ResultSet result = statement2.executeQuery(idCall);
-            String id="";
-            while(result.next()) {
-                id = result.getString(1);
+        if (this.edit){
+            System.out.println("Actualizar datos");
+            Connection connection = new OracleConecction().conectar();
+            System.out.println("Connected to Oracle database server");
+            String sql = "{call ACTUALIZAREMPLEADO(?, ?, ?, ?, ?, ?, ?, ?)}";
+            try{
+                CallableStatement callableStatement = connection.prepareCall(sql);
+                System.out.println("Procedimiento preparado");
+                callableStatement.setString(1,Integer.toString(idEmpleado));
+                callableStatement.setString(2,txt_dni.getText());
+                callableStatement.setString(3,txt_email.getText());
+                callableStatement.setString(4,txt_telf.getText());
+                callableStatement.setString(5,txt_name.getText());
+                callableStatement.setDate(6,Date.valueOf(txt_ingreso.getText()));
+                callableStatement.setDate(7,Date.valueOf(txt_nac.getText()));
+                System.out.println(txt_nac.getText());
+                callableStatement.setString(8,txt_domicilio.getText());
+                System.out.println("Parametros establecidos");
+                System.out.println("Ejecutando procedimiento...");
+                callableStatement.execute();
+                JOptionPane.showMessageDialog(null,"Empleado actualizado correctamente");
+                connection.close();
+            }catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-            statement2.close();
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, id);
-            statement.setString(2, txt_dni.getText());
-            statement.setString(3, txt_email.getText());
-            statement.setString(4, txt_telf.getText());
-            statement.setString(5, txt_name.getText());
-            statement.setString(6, txt_ingreso.getText());
-            statement.setString(7, txt_nac.getText());
-            statement.setString(8, txt_domicilio.getText());
-            statement.setString(9, codArea);
-            int rows = statement.executeUpdate();
-            if(rows > 0 ){
-                System.out.println("A row has been inserted.");
+        }else{
+            System.out.println("Crear uno nuevo");
+            String codArea = "1";
+            Connection connection = new OracleConecction().conectar();
+            System.out.println("Connected to Oracle database server");
+            String sql = "INSERT INTO EMPLEADO VALUES (?, ?, ?, ?, ?, ? ,? ,?, ?)";
+            String idCall = "select id_empleado.nextval from dual";
+            try{
+                Statement statement2 = connection.createStatement();
+                ResultSet result = statement2.executeQuery(idCall);
+                String id="";
+                while(result.next()) {
+                    id = result.getString(1);
+                }
+                statement2.close();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setString(1, id);
+                statement.setString(2, txt_dni.getText());
+                statement.setString(3, txt_email.getText());
+                statement.setString(4, txt_telf.getText());
+                statement.setString(5, txt_name.getText());
+                statement.setString(6, txt_ingreso.getText());
+                statement.setString(7, txt_nac.getText());
+                statement.setString(8, txt_domicilio.getText());
+                statement.setString(9, codArea);
+                int rows = statement.executeUpdate();
+                if(rows > 0 ){
+                    System.out.println("A row has been inserted.");
+                }
+                statement.close();
+                connection.close();
+            }catch (SQLException throwables) {
+                throwables.printStackTrace();
             }
-            statement.close();
-            connection.close();
-        }catch (SQLException throwables) {
-            throwables.printStackTrace();
+
         }
+        this.setVisible(false);
+        Administrador temp = new Administrador();
+        temp.setVisible(true);
+
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -255,14 +324,30 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Registro_EmpleadoClientSolution.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpleadoCS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Registro_EmpleadoClientSolution.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpleadoCS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Registro_EmpleadoClientSolution.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpleadoCS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Registro_EmpleadoClientSolution.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(EmpleadoCS.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -283,7 +368,7 @@ public class Registro_EmpleadoClientSolution extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Registro_EmpleadoClientSolution().setVisible(true);
+                new EmpleadoCS().setVisible(true);
             }
         });
     }
