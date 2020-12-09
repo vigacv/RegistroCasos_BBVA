@@ -307,14 +307,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jTextField8" pref="108" max="32767" attributes="0"/>
+                              <Component id="jTextField8" max="32767" attributes="0"/>
                               <Component id="jTextField10" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="65" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
-                          <Component id="jComboBox2" min="-2" pref="137" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jComboBox2" min="-2" pref="176" max="-2" attributes="0"/>
+                          <EmptySpace pref="24" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
