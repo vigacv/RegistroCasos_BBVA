@@ -7,11 +7,11 @@ package com.datamainworld.RegistroCasos.Interfaz;
 
 import com.datamainworld.RegistroCasos.OracleConecction;
 
+import javax.swing.*;
 import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +19,14 @@ import java.sql.Statement;
  */
 public class Solicitud_Ver extends javax.swing.JFrame {
 
+    private int codSolicitud;
+    private String codProblema;
+    private String codError;
+
     /**
      * Creates new form Solicitud
      */
+
     private void llenarInfoSolicitud(int codSolicitud){
         jTextField5.setText(String.valueOf(codSolicitud));
 
@@ -36,7 +41,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
             if(result.next()){
                 //Llenar datos de la tabla solicitud
                 String desc = result.getString("DESCRIPCION");
-                String codProblema = result.getString("COD_PROBLEMA");
+                codProblema = result.getString("COD_PROBLEMA");
                 jTextField3.setText(desc);
 
                 jComboBox3.addItem(result.getString("STATUS"));
@@ -79,7 +84,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                     jTextField8.setText(result2.getString("HORA"));
 
                     //Llenar datos de la tabla error
-                    String codError = result2.getString("COD_PROBLEMA");
+                    codError = result2.getString("COD_PROBLEMA");
                     String sqlError = "SELECT * FROM ERROR WHERE COD_ERROR='"+codError+"'";
                     ResultSet result3 = statement.executeQuery(sqlError);
                     if (result3.next()){
@@ -173,6 +178,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         llenarInfoSolicitud(codSolicitud);
         llenarCombos();
+        this.codSolicitud = codSolicitud;
     }
 
     /**
@@ -244,6 +250,12 @@ public class Solicitud_Ver extends javax.swing.JFrame {
         jPanel1.setFocusable(false);
         jPanel1.setName(""); // NOI18N
         jPanel1.setOpaque(false);
+
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Empresa");
@@ -491,6 +503,11 @@ public class Solicitud_Ver extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jButton1.setText("Modificar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel9.setText("Fecha inicio:");
@@ -526,16 +543,7 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel9)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel10)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -568,7 +576,16 @@ public class Solicitud_Ver extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(105, 105, 105))))
+                        .addGap(105, 105, 105))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -666,6 +683,51 @@ public class Solicitud_Ver extends javax.swing.JFrame {
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Connection connection = new OracleConecction().conectar();
+        String sqlUpdateSolicitud = "{call actualizarSolicitudEmpleado(?,?)}";
+        try {
+            CallableStatement callableStatement = connection.prepareCall(sqlUpdateSolicitud);
+            callableStatement.setString(1, String.valueOf(codSolicitud));
+            callableStatement.setString(2,String.valueOf(jComboBox3.getSelectedItem()));
+            callableStatement.execute();
+            System.out.println("Status y fecha cierre actualizados");
+
+            String sqlUpdateEmpresa = "{call actualizarContactoConSol(?,?)}";
+            callableStatement = connection.prepareCall(sqlUpdateEmpresa);
+            callableStatement.setString(1,String.valueOf(codSolicitud));
+            callableStatement.setString(2,String.valueOf(jComboBox1.getSelectedItem()));
+            System.out.println("Empresa y contacto actualizados correctamente");
+
+            String sqlUpdateProblema = "{ call actualizarProblema(?,?,?,?)}";
+            callableStatement = connection.prepareCall(sqlUpdateProblema);
+            callableStatement.setString(1,codProblema);
+            callableStatement.setString(2,String.valueOf(jComboBox2.getSelectedItem()));
+            callableStatement.setTimestamp(3, Timestamp.valueOf(jTextField10.getText()));
+            callableStatement.setTimestamp(4, Timestamp.valueOf(jTextField8.getText()));
+            callableStatement.execute();
+            System.out.println("Problema actualizado correctamente");
+
+            String sqlActualizarError = "{call actualizarError(?,?,?,?)}";
+            callableStatement = connection.prepareCall(sqlActualizarError);
+            callableStatement.setString(1,codError);
+            callableStatement.setString(2,String.valueOf(jComboBox7.getSelectedItem()));
+            callableStatement.setString(3,String.valueOf(jComboBox5.getSelectedItem()));
+            callableStatement.setString(4,String.valueOf(jComboBox6.getSelectedItem()));
+            callableStatement.execute();
+
+
+
+            connection.close();
+
+            JOptionPane.showMessageDialog(null,"Solicitud actualizada correctamente");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     /**
      * @param args the command line arguments

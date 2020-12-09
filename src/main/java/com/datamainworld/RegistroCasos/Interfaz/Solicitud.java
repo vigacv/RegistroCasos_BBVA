@@ -28,6 +28,8 @@ public class Solicitud extends javax.swing.JFrame {
 
     }
 
+
+
     private String obtenerCodCliente(){
         String sql = "SELECT * FROM CONTACTO WHERE NOMBRE='"+String.valueOf(BoxContacto.getSelectedItem())+"'";
         Connection connection = new OracleConecction().conectar();
